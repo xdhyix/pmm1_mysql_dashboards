@@ -4,3 +4,4 @@ MySQL Monitoring Dashboards for PMM
 
 - Cross Server Dashboard (72 Graphs Included)
 - Trend Dashboard (69 Graphs Included)
+- Trend Long Dashboard (69 Graphs Included)
