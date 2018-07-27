@@ -40,7 +40,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1525838310119,
+  "iteration": 1532684699061,
   "links": [
     {
       "asDropdown": true,
@@ -991,7 +991,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": "24h",
+          "timeFrom": "48h",
           "timeShift": null,
           "title": "Slave Binlog Execution",
           "tooltip": {
@@ -2256,7 +2256,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 31
+            "y": 4
           },
           "height": "300",
           "id": 47,
@@ -2370,7 +2370,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 31
+            "y": 4
           },
           "height": "300",
           "id": 22,
@@ -2485,7 +2485,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 31
+            "y": 4
           },
           "height": "300",
           "id": 45,
@@ -2600,7 +2600,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 38
+            "y": 12
           },
           "height": "300",
           "id": 46,
@@ -2714,7 +2714,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 38
+            "y": 12
           },
           "height": "300",
           "id": 48,
@@ -2826,7 +2826,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 38
+            "y": 12
           },
           "height": "300",
           "id": 58,
@@ -2957,7 +2957,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 45
+            "y": 20
           },
           "height": "300",
           "id": 59,
@@ -4901,8 +4901,8 @@
             "min": true,
             "rightSide": false,
             "show": true,
-            "sort": "max",
-            "sortDesc": true,
+            "sort": "current",
+            "sortDesc": false,
             "total": false,
             "values": true
           },
@@ -5009,7 +5009,7 @@
             "min": true,
             "rightSide": false,
             "show": true,
-            "sort": "avg",
+            "sort": "min",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -5738,7 +5738,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 79
+            "y": 8
           },
           "height": "300",
           "id": 14,
@@ -5838,7 +5838,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 79
+            "y": 8
           },
           "height": "300",
           "id": 15,
@@ -5938,7 +5938,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 79
+            "y": 8
           },
           "height": "300",
           "id": 62,
@@ -6053,7 +6053,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 84
+            "y": 16
           },
           "height": "300",
           "id": 79,
@@ -6189,7 +6189,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 84
+            "y": 16
           },
           "height": "300",
           "id": 80,
@@ -6326,7 +6326,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 84
+            "y": 16
           },
           "height": "300",
           "id": 81,
@@ -6338,7 +6338,7 @@
             "min": true,
             "rightSide": false,
             "show": true,
-            "sort": "max",
+            "sort": "current",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -6463,7 +6463,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 89
+            "y": 24
           },
           "height": "300",
           "id": 82,
@@ -6615,7 +6615,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 90
+            "y": 9
           },
           "height": "300",
           "id": 10,
@@ -6629,7 +6629,7 @@
             "min": true,
             "rightSide": false,
             "show": true,
-            "sort": "max",
+            "sort": "avg",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -6714,7 +6714,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 90
+            "y": 9
           },
           "height": "300",
           "id": 29,
@@ -6728,7 +6728,7 @@
             "min": true,
             "rightSide": false,
             "show": true,
-            "sort": "max",
+            "sort": "avg",
             "sortDesc": true,
             "total": false,
             "values": true
@@ -6814,7 +6814,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 90
+            "y": 9
           },
           "height": "300",
           "id": 28,
@@ -6911,7 +6911,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 95
+            "y": 17
           },
           "height": "300",
           "id": 30,
@@ -8041,7 +8041,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -8078,5 +8078,5 @@
   "timezone": "browser",
   "title": "Cross Server | donghoon_lee",
   "uid": "000000094",
-  "version": 287
+  "version": 292
 }
