@@ -40,7 +40,7 @@
   "gnetId": null,
   "graphTooltip": 1,
   "id": null,
-  "iteration": 1532684699061,
+  "iteration": 1545126247188,
   "links": [
     {
       "asDropdown": true,
@@ -982,7 +982,7 @@
               "expr": "increase(mysql_slave_status_exec_master_log_pos{instance=~\"$host\"}[1h])",
               "format": "time_series",
               "hide": false,
-              "interval": "1h",
+              "interval": "30m",
               "intervalFactor": 1,
               "legendFormat": "{{ instance }}",
               "metric": "",
@@ -991,7 +991,7 @@
             }
           ],
           "thresholds": [],
-          "timeFrom": "48h",
+          "timeFrom": "1d",
           "timeShift": null,
           "title": "Slave Binlog Execution",
           "tooltip": {
@@ -1047,7 +1047,7 @@
           "dashes": false,
           "datasource": "Prometheus",
           "decimals": null,
-          "description": "The number of queries sent to the server by clients, *excluding those executed within stored programs*.\n\nThis variable does not count the following commands:\n* ``COM_PING``\n* ``COM_STATISTICS``\n* ``COM_STMT_PREPARE``\n* ``COM_STMT_CLOSE``\n* ``COM_STMT_RESET``",
+          "description": "Queries\nThe number of statements executed by the server. This variable includes statements executed within stored programs, unlike the Questions variable. It does not count COM_PING or COM_STATISTICS commands.\n\nQuestions\nThe number of statements executed by the server. This includes only statements sent to the server by clients and not statements executed within stored programs, unlike the Queries variable. This variable does not count COM_PING, COM_STATISTICS, COM_STMT_PREPARE, COM_STMT_CLOSE, or COM_STMT_RESET commands.",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -1099,12 +1099,148 @@
               "metric": "",
               "refId": "A",
               "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_global_status_queries{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_queries{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "B",
+              "step": 120
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
           "title": "Questions",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "cumulative"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": null,
+          "description": "",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 3
+          },
+          "height": "300",
+          "id": 96,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": false,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "sum by (instance)(rate(mysql_global_status_commands_total{command=\"begin\",instance=~\"$host\"}[$interval]))\nor sum by (instance)(irate(mysql_global_status_commands_total{command=\"begin\",instance=~\"$host\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Begin",
+              "metric": "",
+              "refId": "C",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "sum by (instance)(rate(mysql_global_status_commands_total{command=\"commit\",instance=~\"$host\"}[$interval]))\nor sum by (instance)(irate(mysql_global_status_commands_total{command=\"commit\",instance=~\"$host\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Commit",
+              "metric": "",
+              "refId": "A",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "sum by (instance)(rate(mysql_global_status_commands_total{command=\"rollback\",instance=~\"$host\"}[$interval]))\nor sum by (instance)(irate(mysql_global_status_commands_total{command=\"rollback\",instance=~\"$host\"}[5m]))",
+              "format": "time_series",
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Rollback",
+              "metric": "",
+              "refId": "B",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Transactions",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -1151,7 +1287,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 8,
+            "x": 16,
             "y": 3
           },
           "height": "300",
@@ -1249,8 +1385,8 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 16,
-            "y": 3
+            "x": 0,
+            "y": 11
           },
           "height": "300",
           "id": 37,
@@ -1346,7 +1482,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 0,
+            "x": 8,
             "y": 11
           },
           "height": "300",
@@ -1443,7 +1579,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 8,
+            "x": 16,
             "y": 11
           },
           "height": "300",
@@ -1540,8 +1676,8 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 16,
-            "y": 11
+            "x": 0,
+            "y": 19
           },
           "height": "300",
           "id": 40,
@@ -1637,7 +1773,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 0,
+            "x": 8,
             "y": 19
           },
           "height": "300",
@@ -1724,6 +1860,201 @@
           "dashLength": 10,
           "dashes": false,
           "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "Shows how many selects were done without indexes. Such operations can impact performance.\n\n* **Select Scan** is how many queries caused full table scans, in which all the data in the table had to be read and either discarded or returned.\n\n* **Select Range** is how many queries used a range scan, which means MySQL scanned all rows in a given range.\n\n* **Select Full Join** is the number of joins that are not joined on an index, this is usually a huge performance hit.",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 19
+          },
+          "height": "300",
+          "id": 42,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_global_status_select_scan{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_select_scan{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "E",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Select Type (Select Full Table Scan)",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": 2,
+          "description": "**Sort Rows** shows how many rows had to be sorted to return them in the correct order.\n\nFor sorts that could not use indexes, it is important to note the following:\n\n* **Sort Scan** shows how many sorts caused a full table scan.\n\n* **Sort Range** shows how many sorts used a range scan.",
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {},
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 27
+          },
+          "height": "300",
+          "id": 43,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_global_status_sort_scan{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_sort_scan{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "D",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Sort Type (Full Table Sort Scan)",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "short",
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            }
+          ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
           "decimals": null,
           "editable": true,
           "error": false,
@@ -1733,7 +2064,7 @@
             "h": 8,
             "w": 8,
             "x": 8,
-            "y": 19
+            "y": 27
           },
           "height": "300",
           "id": 26,
@@ -1829,7 +2160,7 @@
             "h": 8,
             "w": 8,
             "x": 16,
-            "y": 19
+            "y": 27
           },
           "height": "300",
           "id": 41,
@@ -1932,7 +2263,7 @@
           "dashes": false,
           "datasource": "Prometheus",
           "decimals": 2,
-          "description": "Shows how many selects were done without indexes. Such operations can impact performance.\n\n* **Select Scan** is how many queries caused full table scans, in which all the data in the table had to be read and either discarded or returned.\n\n* **Select Range** is how many queries used a range scan, which means MySQL scanned all rows in a given range.\n\n* **Select Full Join** is the number of joins that are not joined on an index, this is usually a huge performance hit.",
+          "description": "**Sort Rows** shows how many rows had to be sorted to return them in the correct order.\n\nFor sorts that could not use indexes, it is important to note the following:\n\n* **Sort Scan** shows how many sorts caused a full table scan.\n\n* **Sort Range** shows how many sorts used a range scan.",
           "editable": true,
           "error": false,
           "fill": 0,
@@ -1941,202 +2272,7 @@
             "h": 8,
             "w": 8,
             "x": 0,
-            "y": 27
-          },
-          "height": "300",
-          "id": 42,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": true,
-            "min": true,
-            "rightSide": false,
-            "show": true,
-            "sort": "max",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "calculatedInterval": "2m",
-              "datasourceErrors": {},
-              "errors": {},
-              "expr": "rate(mysql_global_status_select_scan{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_select_scan{instance=~\"$host\"}[5m])",
-              "format": "time_series",
-              "hide": false,
-              "interval": "$interval",
-              "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
-              "metric": "",
-              "refId": "E",
-              "step": 120
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Select Type (Select Full Table Scan)",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "Prometheus",
-          "decimals": 2,
-          "description": "**Sort Rows** shows how many rows had to be sorted to return them in the correct order.\n\nFor sorts that could not use indexes, it is important to note the following:\n\n* **Sort Scan** shows how many sorts caused a full table scan.\n\n* **Sort Range** shows how many sorts used a range scan.",
-          "editable": true,
-          "error": false,
-          "fill": 0,
-          "grid": {},
-          "gridPos": {
-            "h": 8,
-            "w": 8,
-            "x": 8,
-            "y": 27
-          },
-          "height": "300",
-          "id": 43,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "hideZero": true,
-            "max": true,
-            "min": true,
-            "rightSide": false,
-            "show": true,
-            "sort": "max",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": true,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "calculatedInterval": "2m",
-              "datasourceErrors": {},
-              "errors": {},
-              "expr": "rate(mysql_global_status_sort_scan{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_sort_scan{instance=~\"$host\"}[5m])",
-              "format": "time_series",
-              "hide": false,
-              "interval": "$interval",
-              "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
-              "metric": "",
-              "refId": "D",
-              "step": 120
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Sort Type (Full Table Sort Scan)",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "short",
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            }
-          ]
-        },
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "Prometheus",
-          "decimals": 2,
-          "description": "**Sort Rows** shows how many rows had to be sorted to return them in the correct order.\n\nFor sorts that could not use indexes, it is important to note the following:\n\n* **Sort Scan** shows how many sorts caused a full table scan.\n\n* **Sort Range** shows how many sorts used a range scan.",
-          "editable": true,
-          "error": false,
-          "fill": 0,
-          "grid": {},
-          "gridPos": {
-            "h": 8,
-            "w": 8,
-            "x": 16,
-            "y": 27
+            "y": 35
           },
           "height": "300",
           "id": 44,
@@ -2259,6 +2395,344 @@
             "y": 4
           },
           "height": "300",
+          "id": 98,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 1,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_locks_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_locks_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "A",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_created_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_created_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Created",
+              "metric": "",
+              "refId": "B",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_requests_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_requests_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "C",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_removed_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_removed_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Removed",
+              "metric": "",
+              "refId": "D",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_waits_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_waits_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Waits Total",
+              "metric": "",
+              "refId": "E",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Rec lock Requested",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "x-axis": true,
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "ms"
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "ms",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {
+            "Avg Row Lock Wait Time": "#BF1B00"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": 0
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 8,
+            "y": 4
+          },
+          "height": "300",
+          "id": 97,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 1,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_locks_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_locks_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "A",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_created_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_created_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "B",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_requests_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_requests_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Requested",
+              "metric": "",
+              "refId": "C",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_removed_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_removed_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Removed",
+              "metric": "",
+              "refId": "D",
+              "step": 120
+            },
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "rate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_waits_total{instance=~\"$host\"}[$interval]) or irate(mysql_info_schema_innodb_metrics_lock_lock_rec_lock_waits_total{instance=~\"$host\"}[5m])",
+              "format": "time_series",
+              "hide": true,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }} - Waits Total",
+              "metric": "",
+              "refId": "E",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Rec lock Created",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "x-axis": true,
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "ms"
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "ms",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {
+            "Avg Row Lock Wait Time": "#BF1B00"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": 0
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 4
+          },
+          "height": "300",
           "id": 47,
           "legend": {
             "alignAsTable": true,
@@ -2355,120 +2829,6 @@
           "dashes": false,
           "datasource": "Prometheus",
           "decimals": null,
-          "editable": true,
-          "error": false,
-          "fill": 0,
-          "grid": {
-            "leftLogBase": 1,
-            "leftMax": null,
-            "leftMin": 0,
-            "rightLogBase": 1,
-            "rightMax": null,
-            "rightMin": 0
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 8,
-            "x": 8,
-            "y": 4
-          },
-          "height": "300",
-          "id": 22,
-          "legend": {
-            "alignAsTable": true,
-            "avg": true,
-            "current": true,
-            "hideEmpty": true,
-            "hideZero": true,
-            "max": true,
-            "min": true,
-            "rightSide": false,
-            "show": true,
-            "sort": "max",
-            "sortDesc": true,
-            "total": false,
-            "values": true
-          },
-          "lines": false,
-          "linewidth": 2,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 1,
-          "points": true,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "calculatedInterval": "2m",
-              "datasourceErrors": {},
-              "errors": {},
-              "expr": "rate(mysql_global_status_innodb_row_lock_time{instance=\"$host\"}[$interval])/rate(mysql_global_status_innodb_row_lock_waits{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_innodb_row_lock_time{instance=~\"$host\"}[5m])/irate(mysql_global_status_innodb_row_lock_waits{instance=~\"$host\"}[5m])",
-              "format": "time_series",
-              "hide": false,
-              "interval": "$interval",
-              "intervalFactor": 1,
-              "legendFormat": "{{ instance }}",
-              "metric": "",
-              "refId": "B",
-              "step": 120
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Avg Row Lock Wait Time",
-          "tooltip": {
-            "msResolution": false,
-            "shared": true,
-            "sort": 2,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "x-axis": true,
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "y-axis": true,
-          "y_formats": [
-            "short",
-            "ms"
-          ],
-          "yaxes": [
-            {
-              "format": "ms",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": true
-            },
-            {
-              "format": "ms",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": 0,
-              "show": false
-            }
-          ]
-        },
-        {
-          "aliasColors": {
-            "Avg Row Lock Wait Time": "#BF1B00"
-          },
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": "Prometheus",
-          "decimals": null,
           "description": "Shows how many table locks MySQL server requested from the storage engine.\n\n**Table Locks Immediate** shows the number of times that a request for a table lock could be granted immediately.\n\n**Table Locks Waited** shows the number of times that a request for a table lock could not be granted immediately. If this metric is rising, you need to deal with lock contention:\n\n* Optimize queries that require table locks.\n* Split tables that require frequent locking or replicate them.",
           "editable": true,
           "error": false,
@@ -2484,8 +2844,8 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 16,
-            "y": 4
+            "x": 0,
+            "y": 12
           },
           "height": "300",
           "id": 45,
@@ -2599,7 +2959,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 0,
+            "x": 8,
             "y": 12
           },
           "height": "300",
@@ -2713,11 +3073,11 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 8,
+            "x": 16,
             "y": 12
           },
           "height": "300",
-          "id": 48,
+          "id": 22,
           "legend": {
             "alignAsTable": true,
             "avg": true,
@@ -2733,13 +3093,13 @@
             "total": false,
             "values": true
           },
-          "lines": true,
+          "lines": false,
           "linewidth": 2,
           "links": [],
           "nullPointMode": "null",
           "percentage": false,
-          "pointradius": 2,
-          "points": false,
+          "pointradius": 1,
+          "points": true,
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
@@ -2750,7 +3110,7 @@
               "calculatedInterval": "2m",
               "datasourceErrors": {},
               "errors": {},
-              "expr": "(rate(mysql_global_status_innodb_deadlocks{instance=~\"$host\"}[$interval]) or rate(mysql_info_schema_innodb_metrics_lock_lock_deadlocks_total{instance=~\"$host\"}[$interval])) or (irate(mysql_global_status_innodb_deadlocks{instance=~\"$host\"}[5m]) or irate(mysql_info_schema_innodb_metrics_lock_lock_deadlocks_total{instance=~\"$host\"}[5m]))",
+              "expr": "rate(mysql_global_status_innodb_row_lock_time{instance=\"$host\"}[$interval])/rate(mysql_global_status_innodb_row_lock_waits{instance=~\"$host\"}[$interval]) or irate(mysql_global_status_innodb_row_lock_time{instance=~\"$host\"}[5m])/irate(mysql_global_status_innodb_row_lock_waits{instance=~\"$host\"}[5m])",
               "format": "time_series",
               "hide": false,
               "interval": "$interval",
@@ -2764,7 +3124,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "InnoDB Deadlocks",
+          "title": "Avg Row Lock Wait Time",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -2787,7 +3147,7 @@
           ],
           "yaxes": [
             {
-              "format": "short",
+              "format": "ms",
               "label": null,
               "logBase": 1,
               "max": null,
@@ -2825,8 +3185,8 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 16,
-            "y": 12
+            "x": 0,
+            "y": 20
           },
           "height": "300",
           "id": 58,
@@ -2956,7 +3316,7 @@
           "gridPos": {
             "h": 8,
             "w": 8,
-            "x": 0,
+            "x": 8,
             "y": 20
           },
           "height": "300",
@@ -3060,6 +3420,120 @@
               "logBase": 1,
               "max": null,
               "min": null,
+              "show": false
+            }
+          ]
+        },
+        {
+          "aliasColors": {
+            "Avg Row Lock Wait Time": "#BF1B00"
+          },
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "decimals": null,
+          "editable": true,
+          "error": false,
+          "fill": 0,
+          "grid": {
+            "leftLogBase": 1,
+            "leftMax": null,
+            "leftMin": 0,
+            "rightLogBase": 1,
+            "rightMax": null,
+            "rightMin": 0
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 16,
+            "y": 20
+          },
+          "height": "300",
+          "id": 48,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "hideEmpty": true,
+            "hideZero": true,
+            "max": true,
+            "min": true,
+            "rightSide": false,
+            "show": true,
+            "sort": "max",
+            "sortDesc": true,
+            "total": false,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 2,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "calculatedInterval": "2m",
+              "datasourceErrors": {},
+              "errors": {},
+              "expr": "(rate(mysql_global_status_innodb_deadlocks{instance=~\"$host\"}[$interval]) or rate(mysql_info_schema_innodb_metrics_lock_lock_deadlocks_total{instance=~\"$host\"}[$interval])) or (irate(mysql_global_status_innodb_deadlocks{instance=~\"$host\"}[5m]) or irate(mysql_info_schema_innodb_metrics_lock_lock_deadlocks_total{instance=~\"$host\"}[5m]))",
+              "format": "time_series",
+              "hide": false,
+              "interval": "$interval",
+              "intervalFactor": 1,
+              "legendFormat": "{{ instance }}",
+              "metric": "",
+              "refId": "B",
+              "step": 120
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "InnoDB Deadlocks",
+          "tooltip": {
+            "msResolution": false,
+            "shared": true,
+            "sort": 2,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "x-axis": true,
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "y-axis": true,
+          "y_formats": [
+            "short",
+            "ms"
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
+              "show": true
+            },
+            {
+              "format": "ms",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": 0,
               "show": false
             }
           ]
@@ -6279,7 +6753,7 @@
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "InnoDB Data Write I/O",
+          "title": "InnoDB Write I/O",
           "tooltip": {
             "msResolution": false,
             "shared": true,
@@ -8078,5 +8552,5 @@
   "timezone": "browser",
   "title": "Cross Server | donghoon_lee",
   "uid": "000000094",
-  "version": 292
+  "version": 304
 }
