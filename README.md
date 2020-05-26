@@ -1,4 +1,4 @@
-# pmm_mysql_dashboards
+# pmm1_mysql_dashboards
 MySQL Monitoring Dashboards for PMM
 (Based on PMM 1.10.0)
 
